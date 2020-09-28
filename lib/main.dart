@@ -16,7 +16,8 @@ class _HomeState extends State<Home> {
     CatNameList(1, "Cat 1"),
     CatNameList(2, "cat 2"),
     CatNameList(3, "cat 3"),
-    CatNameList(4, "cat 4")
+    CatNameList(4, "cat 4"),
+    CatNameList(5, "Testing to see really long name")
   ];
 
   List<DropdownMenuItem<CatNameList>> _dropdownMenuOfCats;
