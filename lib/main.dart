@@ -46,6 +46,18 @@ class _HomeState extends State<Home> {
     return Scaffold(
       appBar: AppBar(
         title: Text("Hendrix Cat Finder"),
+        actions: <Widget>[
+          IconButton(
+            icon: const Icon(Icons.add_circle),
+            tooltip: "Create a Post",
+            onPressed: () {},
+          ),
+          IconButton(
+            icon: const Icon(Icons.account_circle),
+            tooltip: "Add a Friend",
+            onPressed: () {},
+          ),
+        ],
       ),
       body: Column(
         children: <Widget>[
