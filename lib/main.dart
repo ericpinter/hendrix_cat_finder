@@ -62,22 +62,23 @@ class _HomeState extends State<Home> {
       body: Column(
         children: <Widget>[
           Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Container(
-              padding: const EdgeInsets.only(left: 10.0, right: 10.0),
-              decoration: BoxDecoration(
-                border: Border.all(color: Colors.red, width: 5.0),
-              ),
-              child: DropdownButton(
-                  value: _selectedCat,
-                  items: _dropdownMenuOfCats,
-                  onChanged: (value) {
-                    setState(() {
-                      _selectedCat = value;
-                    });
-                  }),
-            ),
-          ),
+              padding: const EdgeInsets.all(8.0),
+              child: Center(
+                child: Container(
+                  padding: const EdgeInsets.only(left: 10.0, right: 10.0),
+                  decoration: BoxDecoration(
+                    border: Border.all(color: Colors.red, width: 5.0),
+                  ),
+                  child: DropdownButton(
+                      value: _selectedCat,
+                      items: _dropdownMenuOfCats,
+                      onChanged: (value) {
+                        setState(() {
+                          _selectedCat = value;
+                        });
+                      }),
+                ),
+              )),
           Text(" ${_selectedCat.name}"),
         ],
       ),
