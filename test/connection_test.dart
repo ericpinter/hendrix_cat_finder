@@ -3,7 +3,7 @@ import 'package:hendrix_cat_finder/network.dart';
 
 void main() {
   test('one', () async {
-    Friend self = new Friend("127.0.0.1", "self");
+    Friend self = new Friend("127.0.0.1");
     expect(self.ipAddr, "127.0.0.1");
     NetworkLog nl = new NetworkLog();
     await nl.setup();

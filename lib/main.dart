@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'alert.dart';
+import 'network.dart';
+
 
 void main() => runApp(MaterialApp(
       title: "Hendrix Cat Finder",
@@ -22,6 +25,7 @@ class _HomeState extends State<Home> {
 
   List<DropdownMenuItem<CatNameList>> _dropdownMenuOfCats;
   CatNameList _selectedCat;
+  NetworkLog log = new NetworkLog();//eventually replace with loading from sharedprefs
 
   void initState() {
     super.initState();
@@ -56,7 +60,7 @@ class _HomeState extends State<Home> {
           IconButton(
             icon: const Icon(Icons.account_circle),
             tooltip: "Add a Friend",
-            onPressed: () {},
+            onPressed: () {promptFriendDialog();}
           ),
         ],
       ),
@@ -85,8 +89,20 @@ class _HomeState extends State<Home> {
       ),
     );
   }
-}
 
+  Future<void> promptFriendDialog() async {
+    await showDialog(
+      context: context,
+      builder: (_) => friendAlertDialog(),
+      barrierDismissible: true,
+    ).then((ip) => {if (ip != null) log.friends.add(ip)});
+
+  }
+
+
+
+}
+  
 class CatNameList {
   int value;
   String name;
