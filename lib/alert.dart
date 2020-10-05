@@ -8,15 +8,13 @@ class friendAlertDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-        title: Text("Add a new product"),
+        title: Text("Add a new friend"),
         content: Form(
           key: _formKey,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisSize: MainAxisSize.min,
-
             children: <Widget>[
-
               TextFormField(
                 decoration: const InputDecoration(
                   hintText: 'IP address',
@@ -25,7 +23,7 @@ class friendAlertDialog extends StatelessWidget {
                   friend_ip = ip;
                 },
                 validator: (value) {
-                  if (value.isEmpty ) {
+                  if (value.isEmpty) {
                     return 'Please enter some text';
                   } else if (!isIP(value, 4)) {
                     return 'Please enter a valid IPv4 address';
@@ -33,23 +31,19 @@ class friendAlertDialog extends StatelessWidget {
                   return null;
                 },
               ),
-
-
             ],
-
           ),
-
         ),
-        actions:
-        [RaisedButton(onPressed: () {
-          if (_formKey.currentState.validate()) {
-            _formKey.currentState.save();
-            Navigator.pop(context, friend_ip);
-          }
-        },
-          child: Text("Submit"),
-        )
-        ]
-    );
+        actions: [
+          RaisedButton(
+            onPressed: () {
+              if (_formKey.currentState.validate()) {
+                _formKey.currentState.save();
+                Navigator.pop(context, friend_ip);
+              }
+            },
+            child: Text("Submit"),
+          )
+        ]);
   }
 }
