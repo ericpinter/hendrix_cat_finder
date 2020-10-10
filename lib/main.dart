@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'alert.dart';
 import 'network.dart';
-
+import 'make_post.dart';
+import 'post_model.dart';
 
 void main() => runApp(MaterialApp(
       title: "Hendrix Cat Finder",
@@ -52,7 +53,9 @@ class _HomeState extends State<Home> {
 
   @override
   Widget build(BuildContext context) {
-    if (log == null) log = new NetworkLog(reload);//eventually replace with loading from sharedprefs
+    if (log == null)
+      log = new NetworkLog(
+          reload); //eventually replace with loading from sharedprefs
     return Scaffold(
       appBar: AppBar(
         title: Text("Hendrix Cat Finder"),
@@ -60,13 +63,16 @@ class _HomeState extends State<Home> {
           IconButton(
             icon: const Icon(Icons.add_circle),
             tooltip: "Create a Post",
-            onPressed: () {},
+            onPressed: () {
+              makePostCatLocation(context);
+            },
           ),
           IconButton(
-            icon: const Icon(Icons.account_circle),
-            tooltip: "Add a Friend",
-            onPressed: () {promptFriendDialog();}
-          ),
+              icon: const Icon(Icons.account_circle),
+              tooltip: "Add a Friend",
+              onPressed: () {
+                promptFriendDialog();
+              }),
         ],
       ),
       body: Column(
@@ -90,11 +96,24 @@ class _HomeState extends State<Home> {
                 ),
               )),
           Text(" ${_selectedCat.name}"),
-          for (Message message in log.log) if (message !=null && !message.protocol) ListTile(title:Text(message.text)),
-          for (Friend f in log.friends) ListTile(title:Text(f.toString()))
+          for (Message message in log.log)
+            if (message != null && !message.protocol)
+              ListTile(title: Text(message.text)),
+          for (Friend f in log.friends) ListTile(title: Text(f.toString()))
         ],
       ),
     );
+  }
+
+  void makePostCatLocation(BuildContext context) async {
+    final result = await Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => MakePost(),
+        ));
+    setState(() {
+      posts.add(result);
+    });
   }
 
   Future<void> promptFriendDialog() async {
@@ -108,13 +127,5 @@ class _HomeState extends State<Home> {
       print("outcome" + so.toString());
     }
     reload();
-
   }
-}
-  
-class CatNameList {
-  int value;
-  String name;
-
-  CatNameList(this.value, this.name);
 }
