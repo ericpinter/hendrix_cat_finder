@@ -19,11 +19,4 @@ class CatNameList {
   CatNameList(this.value, this.name);
 }
 
-List<Post> posts = [
-  Post(
-      catName: "I\'m upset!",
-      location: "I got a C on my paper that I thought I did well on."),
-  Post(
-      catName: "I need to sleep",
-      location: "I am having trouble sleeping because I miss my cat."),
-];
+List<Post> posts = [];

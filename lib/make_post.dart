@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'post_model.dart';
+import 'post_design.dart';
 
 class MakePost extends StatefulWidget {
   @override

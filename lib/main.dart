@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'alert.dart';
 import 'network.dart';
 import 'make_post.dart';
-import 'post_model.dart';
+import 'post_design.dart';
 
 void main() => runApp(MaterialApp(
       title: "Hendrix Cat Finder",
@@ -42,10 +42,7 @@ class _HomeState extends State<Home> {
     List<DropdownMenuItem<CatNameList>> items = List();
     for (CatNameList Cat in CatNames) {
       items.add(
-        DropdownMenuItem(
-          child: Text(Cat.name),
-          value: Cat,
-        ),
+        DropdownMenuItem(value: Cat),
       );
     }
     return items;
