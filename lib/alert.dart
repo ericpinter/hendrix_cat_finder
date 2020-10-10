@@ -19,6 +19,7 @@ class friendAlertDialog extends StatelessWidget {
                 decoration: const InputDecoration(
                   hintText: 'IP address',
                 ),
+                keyboardType: TextInputType.number,
                 onSaved: (ip) {
                   friend_ip = ip;
                 },

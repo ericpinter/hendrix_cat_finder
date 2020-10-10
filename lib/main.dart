@@ -25,7 +25,11 @@ class _HomeState extends State<Home> {
 
   List<DropdownMenuItem<CatNameList>> _dropdownMenuOfCats;
   CatNameList _selectedCat;
-  NetworkLog log = new NetworkLog();//eventually replace with loading from sharedprefs
+  NetworkLog log;
+
+  void reload() {
+    setState(() {});
+  }
 
   void initState() {
     super.initState();
@@ -48,6 +52,7 @@ class _HomeState extends State<Home> {
 
   @override
   Widget build(BuildContext context) {
+    if (log == null) log = new NetworkLog(reload);//eventually replace with loading from sharedprefs
     return Scaffold(
       appBar: AppBar(
         title: Text("Hendrix Cat Finder"),
@@ -85,22 +90,26 @@ class _HomeState extends State<Home> {
                 ),
               )),
           Text(" ${_selectedCat.name}"),
+          for (Message message in log.log) if (message !=null && !message.protocol) ListTile(title:Text(message.text)),
+          for (Friend f in log.friends) ListTile(title:Text(f.toString()))
         ],
       ),
     );
   }
 
   Future<void> promptFriendDialog() async {
-    await showDialog(
+    String ip = await showDialog(
       context: context,
       builder: (_) => friendAlertDialog(),
       barrierDismissible: true,
-    ).then((ip) => {if (ip != null) log.friends.add(ip)});
+    );
+    if (ip != null) {
+      SocketOutcome so = await log.friends.add(ip);
+      print("outcome" + so.toString());
+    }
+    reload();
 
   }
-
-
-
 }
   
 class CatNameList {
