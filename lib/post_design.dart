@@ -1,22 +1,9 @@
-class Post {
-  String catName;
-  String location;
-  int value;
-  String name;
-
-  Post({this.catName, this.location, this.value, this.name});
-
-  void addPost({String text, String catNames}) {
-    var updatePost = new Post(location: text, catName: catNames);
-    posts.add(updatePost);
-  }
-}
+import 'package:flutter/material.dart';
 
 class CatNameList {
-  int value;
+  int id;
   String name;
-
-  CatNameList(this.value, this.name);
+  String location;
+  String rating;
+  CatNameList(this.id, this.name, this.location, this.rating);
 }
-
-List<Post> posts = [];
