@@ -31,7 +31,7 @@ class _MakePost extends State<MakePost> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-        title: Text("Add new post"),
+        title: Text("Add New Cat Info"),
         content: Form(
           child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
