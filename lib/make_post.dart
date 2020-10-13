@@ -30,7 +30,7 @@ class _MakePost extends State<MakePost> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-        title: Text("Add a new friend"),
+        title: Text("Add new post"),
         content: Form(
           child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
