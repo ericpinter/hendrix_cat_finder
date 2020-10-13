@@ -12,7 +12,8 @@ class MakePost extends StatefulWidget {
   }
 }
 
-void _addToDb(String catName, String catLocation, String catRating) async {
+void _addToDatabase(
+    String catName, String catLocation, String catRating) async {
   await DatabaseHelper.instance.insert(
       Cat(catName: catName, catLocation: catLocation, catRating: catRating));
 }
@@ -73,7 +74,7 @@ class _MakePost extends State<MakePost> {
                 FlatButton(
                   textColor: Color(0xFF6200EE),
                   onPressed: () {
-                    _addToDb(
+                    _addToDatabase(
                         controllerOne.text, controllerTwo.text, ratingValue);
                     Navigator.pop(context, controllerOne.text);
                   },
