@@ -22,7 +22,6 @@ class _MakePost extends State<MakePost> {
 
   TextEditingController controllerOne = TextEditingController();
   TextEditingController controllerTwo = TextEditingController();
-  TextEditingController controllerThree = TextEditingController();
 
   String catName = "";
   String location = "";
