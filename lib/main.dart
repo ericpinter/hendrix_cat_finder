@@ -141,12 +141,13 @@ class _HomeState extends State<Home> {
                     border: OutlineInputBorder(), labelText: "Location"),
               )),
           new Container(
+              // Not sure how to disable change rating on main page, but will go back to orginals et if change page back.
               margin: const EdgeInsets.only(top: 20.0),
               child: RatingBar(
                 initialRating: initialRatingValue,
                 minRating: 1,
                 direction: Axis.horizontal,
-                allowHalfRating: true,
+                allowHalfRating: false,
                 itemCount: 5,
                 itemPadding: EdgeInsets.symmetric(horizontal: 4.0),
                 itemBuilder: (context, _) => Icon(
