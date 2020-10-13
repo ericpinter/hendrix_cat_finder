@@ -5,9 +5,7 @@ import 'make_post.dart';
 import 'post_design.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'dart:async';
-
 import 'databaseHelper.dart';
-import 'cat.dart';
 
 void main() => runApp(MaterialApp(
       title: "Hendrix Cat Finder",
