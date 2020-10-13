@@ -51,7 +51,7 @@ class _HomeState extends State<Home> {
         );
       });
       _dropdownMenuOfCats = _dropdownlistofcats;
-      if (_dropdownMenuOfCats.length != 0) {
+      if (_dropdownMenuOfCats.length != 1) {
         print("selectedCat");
       }
     }).catchError((error) {
