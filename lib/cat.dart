@@ -5,7 +5,7 @@ class Cat {
   final String catRating;
 
   Cat({this.id, this.catName, this.catLocation, this.catRating});
-
+//https://flutter.dev/docs/cookbook/persistence/sqlite
   Map<String, dynamic> toMap() {
     return {
       'id': id,
