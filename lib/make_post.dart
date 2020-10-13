@@ -77,7 +77,7 @@ class _MakePost extends State<MakePost> {
                         controllerOne.text, controllerTwo.text, ratingValue);
                     Navigator.pop(context, controllerOne.text);
                   },
-                  child: Text("POST CAT"),
+                  child: Text("Submit"),
                 ),
               ]),
         ));
