@@ -22,7 +22,6 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
   TextEditingController controllerOne = TextEditingController();
   TextEditingController controllerTwo = TextEditingController();
-  TextEditingController controllerThree = TextEditingController();
   List<CatNameList> _dropdownMenuOfCats = [];
 
   //IS there a list of cat names somewhere????
