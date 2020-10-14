@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_rating_bar/flutter_rating_bar.dart';
-import 'package:localstorage/localstorage.dart';
-
-import 'databaseHelper.dart';
 import 'cat.dart';
+import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 
 class MakePost extends StatefulWidget {
   @override
@@ -12,15 +9,7 @@ class MakePost extends StatefulWidget {
   }
 }
 
-void _addToDatabase(
-    String catName, String catLocation, String catRating) async {
-  await DatabaseHelper.instance.insert(
-      Cat(catName: catName, catLocation: catLocation, catRating: catRating));
-}
-
 class _MakePost extends State<MakePost> {
-  final LocalStorage storage = new LocalStorage('CatApp');
-
   TextEditingController controllerOne = TextEditingController();
   TextEditingController controllerTwo = TextEditingController();
 
@@ -72,11 +61,14 @@ class _MakePost extends State<MakePost> {
                       },
                     )),
                 FlatButton(
-                  textColor: Color(0xFF6200EE),
+                  textColor: Theme.of(context).accentColor,
                   onPressed: () {
-                    _addToDatabase(
-                        controllerOne.text, controllerTwo.text, ratingValue);
-                    Navigator.pop(context, controllerOne.text);
+                    Navigator.pop(
+                        context,
+                        Cat(
+                            name: controllerOne.text,
+                            location: controllerTwo.text,
+                            rating: ratingValue));
                   },
                   child: Text("Submit"),
                 ),

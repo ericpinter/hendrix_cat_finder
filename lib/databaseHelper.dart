@@ -5,18 +5,17 @@ import 'cat.dart';
 class DatabaseHelper {
   static final _databaseName = "cat.db";
   static final _databaseVersion = 1;
-
   static final catTable = 'cat';
-
   static final id = 'id';
-  static final catName = 'catName';
-  static final catLocation = 'catLocation';
-  static final catRating = 'catRating';
+  static final catName = 'name';
+  static final catLocation = 'location';
+  static final catRating = 'rating';
 
   DatabaseHelper._privateConstructor();
-  static final DatabaseHelper instance = DatabaseHelper._privateConstructor();
 
+  static final DatabaseHelper instance = DatabaseHelper._privateConstructor();
   static Database _database;
+
   Future<Database> get database async {
     if (_database != null) return _database;
     _database = await _initDatabase();
@@ -43,7 +42,7 @@ class DatabaseHelper {
 
   Future<int> insert(Cat cat) async {
     Database db = await instance.database;
-    var res = await db.insert(catTable, cat.toMap());
+    var res = await db.insert(catTable, cat.toJson());
     return res;
   }
 
@@ -55,14 +54,14 @@ class DatabaseHelper {
     return res;
   }
 
-  Future<Cat> queryWithName(int id) async {
+  Future<Cat> queryWithName(int qid) async {
     Database db = await instance.database;
     List<Map> results = await db.query("cat",
-        columns: ["id", "catName", "catLocation", "catRating"],
-        where: 'id = ?',
-        whereArgs: [id]);
+        columns: [id, catName, catLocation, catRating],
+        where: '$id = ?',
+        whereArgs: [qid]);
     if (results.length > 0) {
-      return new Cat.fromMap(results.first);
+      return new Cat.fromJson(results.first);
     }
     return null;
   }

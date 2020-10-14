@@ -1,7 +1,11 @@
 import 'dart:io';
 import 'dart:convert';
-import 'package:json_annotation/json_annotation.dart';
 import 'dart:typed_data';
+import 'package:json_annotation/json_annotation.dart';
+import 'package:localstorage/localstorage.dart';
+
+import 'databaseHelper.dart';
+import 'cat.dart';
 
 part 'network.g.dart'; // this is the destination file for json_serializable code-gen
 
@@ -13,16 +17,22 @@ const int ourPort = 4444;
 class NetworkLog {
   List<Message> _log = [];
   Friends friends = new Friends();
+  final LocalStorage storage = new LocalStorage('CatApp');
   var _message_callback;
 
-  NetworkLog (this._message_callback) {
+  NetworkLog(this._message_callback) {
     this._setupServer();
+  }
+
+  Future<int> _addToDatabase(Cat cat) async {
+    return DatabaseHelper.instance.insert(cat);
   }
 
   Future<void> _setupServer() async {
     try {
-      ServerSocket server =
-      await ServerSocket.bind(InternetAddress.anyIPv4, ourPort,shared: true);
+      ServerSocket server = await ServerSocket.bind(
+          InternetAddress.anyIPv4, ourPort,
+          shared: true);
       server.listen(_listenToSocket); // StreamSubscription<Socket>
     } on SocketException catch (e) {
       print(e.toString());
@@ -35,23 +45,33 @@ class NetworkLog {
     });
   }
 
-  void _handleIncomingMessage(String ip, Uint8List incomingData) {
+  Future<void> sendAll(Message message) async {
+    _addToDatabase(message.cat);
+    for (Friend f in friends) {
+      f.send(message);
+    }
+    await _message_callback();
+  }
+
+  void _handleIncomingMessage(String ip, Uint8List incomingData) async {
     String received = String.fromCharCodes(incomingData);
     print("Received '$received' from '$ip'");
     Message m = Message.fromJson(json.decode(received));
-    if (!m.protocol) _log.add(m);
     friends.add(ip);
     friends._ips2Friends[ip].online = true;
     print("$_log");
+    if (!m.protocol) {
+      _log.add(m);
+      await _addToDatabase(m.cat);
+    }
     _message_callback();
   }
 
   List<Message> get log => _log;
-
 }
 
 class Friends extends Iterable<Friend> {
-  Map<String,Friend> _ips2Friends = {};
+  Map<String, Friend> _ips2Friends = {};
 
   Future<SocketOutcome> add(String ip) {
     print("adding $ip as friend");
@@ -70,19 +90,20 @@ class Friends extends Iterable<Friend> {
   @override
   Iterator<Friend> get iterator => _ips2Friends.values.iterator;
 }
+
 //removing names for the moment, just to simplify things. May add them back in, so leaving this as its own class
 class Friend {
   String _ipAddr;
-  bool online=false;
+  bool online = false;
 
   Friend(this._ipAddr);
 
-  String toString(){
+  String toString() {
     return "$ipAddr online<$online>";
   }
 
   Future<SocketOutcome> confirmConnection() async {
-    return send(Message(text:"",protocol:true));
+    return send(Message(cat: null, protocol: true));
   }
 
   Future<SocketOutcome> send(Message message) async {
@@ -104,16 +125,19 @@ class Friend {
 
 @JsonSerializable()
 class Message {
-  final String text;
-  final bool protocol;//If true, this should not be displayed to users and is just for connection checking
+  final Cat cat;
+  //If true, this should not be displayed to users and is just for connection checking
+  final bool protocol;
 
-  Message({this.text="",this.protocol=false});
+  Message({this.cat, this.protocol = false});
 
   String toString() {
     return json.encode(this);
   }
 
-  factory Message.fromJson(Map<String, dynamic> json) => _$MessageFromJson(json);
+  factory Message.fromJson(Map<String, dynamic> json) =>
+      _$MessageFromJson(json);
+
   Map<String, dynamic> toJson() => _$MessageToJson(this);
 }
 

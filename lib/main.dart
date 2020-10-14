@@ -1,8 +1,9 @@
+import 'dart:ffi';
 import 'package:flutter/material.dart';
 import 'alert.dart';
+import 'cat.dart';
 import 'network.dart';
 import 'make_post.dart';
-import 'post_design.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'dart:async';
 import 'databaseHelper.dart';
@@ -20,7 +21,7 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
   TextEditingController controllerOne = TextEditingController();
   TextEditingController controllerTwo = TextEditingController();
-  List<CatNameList> _dropdownMenuOfCats = [];
+  List<Cat> _dropdownMenuOfCats = [];
 
   //IS there a list of cat names somewhere????
   int _selectedCat;
@@ -29,35 +30,27 @@ class _HomeState extends State<Home> {
 
   void _getCatInformation(int id) async {
     DatabaseHelper.instance.queryWithName(id).then((value) {
-      controllerOne.text = value.catName;
-      controllerTwo.text = value.catLocation;
+      controllerOne.text = value.name;
+      controllerTwo.text = value.location;
       setState(() {
-        initialRatingValue = double.parse(value.catRating);
+        initialRatingValue = double.parse(value.rating);
       });
     }).catchError((error) {
       print(error);
     });
   }
 
-  getDropDownCatValue() {
-    List<CatNameList> _dropdownlistofcats = [];
-    DatabaseHelper.instance.queryAllRows().then((value) {
-      value.forEach((element) {
-        _dropdownlistofcats.add(
-          CatNameList(element['id'], element['catName'], element["catLocation"],
-              element["cartRating"]),
-        );
-      });
-      _dropdownMenuOfCats = _dropdownlistofcats;
-      if (_dropdownMenuOfCats.length != 1) {
-        print("selectedCat");
-      }
-    }).catchError((error) {
-      print(error);
-    });
+  Future<Void> getDropDownCatValue() async {
+    var query = await DatabaseHelper.instance.queryAllRows();
+    _dropdownMenuOfCats = query
+        .map((json) => Cat.fromJson(json))
+        .where((cat) => cat != null)
+        .toList();
+    print(_dropdownMenuOfCats);
   }
 
-  void reload() {
+  Future<void> reload() async {
+    await getDropDownCatValue();
     setState(() {});
   }
 
@@ -78,16 +71,12 @@ class _HomeState extends State<Home> {
           IconButton(
             icon: const Icon(Icons.add_circle),
             tooltip: "Create a Post",
-            onPressed: () {
-              makePostCatLocation(context);
-            },
+            onPressed: promptCatLocation,
           ),
           IconButton(
               icon: const Icon(Icons.account_circle),
               tooltip: "Add a Friend",
-              onPressed: () {
-                promptFriendDialog();
-              }),
+              onPressed: promptFriendDialog),
         ],
       ),
       body: Column(
@@ -102,13 +91,14 @@ class _HomeState extends State<Home> {
                   ),
                   child: DropdownButton(
                       value: _selectedCat,
-                      items: [
-                        for (CatNameList cat in _dropdownMenuOfCats)
-                          DropdownMenuItem(
-                            value: cat.id,
-                            child: Text(cat.name),
-                          )
-                      ],
+                      items: _dropdownMenuOfCats
+                          .asMap()
+                          .entries
+                          .map((MapEntry e) => DropdownMenuItem(
+                                value: 1 + e.key, //TODO handle differences in display list id and db id more gracefully.
+                                child: Text(e.value.name),
+                              ))
+                          .toList(),
                       onChanged: (value) {
                         setState(() {
                           _selectedCat = value;
@@ -120,12 +110,9 @@ class _HomeState extends State<Home> {
           // Text(" ${_selectedCat.name}"),
           new Container(
             margin: const EdgeInsets.only(top: 20.0, left: 10.0, right: 10.0),
-            child: new TextFormField(
+            child: new TextField(
                 controller: controllerOne,
                 enabled: false,
-                onChanged: (String catName) {
-                  catName = catName;
-                },
                 decoration: InputDecoration(
                     border: OutlineInputBorder(), labelText: "Cat Name")),
           ),
@@ -134,46 +121,42 @@ class _HomeState extends State<Home> {
               child: new TextField(
                 controller: controllerTwo,
                 enabled: false,
-                onChanged: (String locationName) {
-                  locationName = locationName;
-                },
                 decoration: InputDecoration(
                     border: OutlineInputBorder(), labelText: "Location"),
               )),
           new Container(
-              // Not sure how to disable change rating on main page, but will go back to orginals et if change page back.
               margin: const EdgeInsets.only(top: 20.0),
-              child: RatingBar(
-                initialRating: initialRatingValue,
-                minRating: 1,
+              child: RatingBarIndicator(
+                rating: initialRatingValue,
                 direction: Axis.horizontal,
-                allowHalfRating: false,
                 itemCount: 5,
                 itemPadding: EdgeInsets.symmetric(horizontal: 4.0),
                 itemBuilder: (context, _) => Icon(
                   Icons.star,
                   color: Colors.amber,
                 ),
-                onRatingUpdate: (rating) {
-                  print(rating);
-                },
               )),
+          Text("Message Log"),
           for (Message message in log.log)
-            if (message != null && !message.protocol)
-              ListTile(title: Text(message.text)),
+            if (message != null && !message.protocol) message.cat.toWidget(),
+          //probably it would be best to put all the display code in the same place, but at the moment toWidget is doing all the formatting
+          Text("Friend List"),
           for (Friend f in log.friends) ListTile(title: Text(f.toString()))
         ],
       ),
     );
   }
 
-  void makePostCatLocation(BuildContext context) async {
-    final result = await Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => MakePost(),
-        ));
-    setState(() {});
+  Future<void> promptCatLocation() async {
+    final result = await showDialog(
+      context: context,
+      builder: (_) => MakePost(),
+      barrierDismissible: true,
+    );
+    if (result != null) {
+      print("sending news of cat ${result.toString()}");
+      log.sendAll(Message(cat: result, protocol: false));
+    }
   }
 
   Future<void> promptFriendDialog() async {
