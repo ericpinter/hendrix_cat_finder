@@ -17,10 +17,11 @@ const int ourPort = 4444;
 class NetworkLog {
   List<Message> _log = [];
   Friends friends = new Friends();
+  bool persist;
   final LocalStorage storage = new LocalStorage('CatApp');
   var _message_callback;
 
-  NetworkLog(this._message_callback) {
+  NetworkLog(this._message_callback, {this.persist=true}) {
     this._setupServer();
   }
 
@@ -62,7 +63,7 @@ class NetworkLog {
     print("$_log");
     if (!m.protocol) {
       _log.add(m);
-      await _addToDatabase(m.cat);
+      if (this.persist) await _addToDatabase(m.cat);
     }
     _message_callback();
   }
