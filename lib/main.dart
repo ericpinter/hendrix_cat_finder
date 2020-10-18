@@ -113,7 +113,8 @@ class _HomeState extends State<Home> {
                 controller: controllerOne,
                 enabled: false,
                 decoration: InputDecoration(
-                    border: OutlineInputBorder(), labelText: "Cat Name")),
+                    border: OutlineInputBorder(),
+                    labelText: "Add new cat with top right button")),
           ),
           new Container(
               margin: const EdgeInsets.only(top: 20.0, left: 10.0, right: 10.0),
@@ -121,12 +122,14 @@ class _HomeState extends State<Home> {
                 controller: controllerTwo,
                 enabled: false,
                 decoration: InputDecoration(
-                    border: OutlineInputBorder(), labelText: "Location"),
+                    border: OutlineInputBorder(),
+                    labelText: "Add new loaction with top right button"),
               )),
           new Container(
               margin: const EdgeInsets.only(top: 20.0),
               child: RatingBarIndicator(
-                rating: initialRatingValue,
+                //rating: initialRatingValue,
+                //take away or leave not sure? just for start visuals
                 direction: Axis.horizontal,
                 itemCount: 5,
                 itemPadding: EdgeInsets.symmetric(horizontal: 4.0),
