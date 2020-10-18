@@ -122,7 +122,10 @@ class _HomeState extends State<Home> {
                 controller: controllerTwo,
                 enabled: false,
                 decoration: InputDecoration(
-                    border: OutlineInputBorder(),
+                    border: OutlineInputBorder(
+                      borderSide: BorderSide(color: Colors.blue, width: 1.0),
+                      //changing the outside border doesnt work?
+                    ),
                     labelText: "Add new loaction with top right button"),
               )),
           new Container(
