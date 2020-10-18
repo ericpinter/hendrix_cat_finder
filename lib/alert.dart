@@ -37,6 +37,7 @@ class friendAlertDialog extends StatelessWidget {
         ),
         actions: [
           RaisedButton(
+            textColor: Theme.of(context).accentColor,
             onPressed: () {
               if (_formKey.currentState.validate()) {
                 _formKey.currentState.save();

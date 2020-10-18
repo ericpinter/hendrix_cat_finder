@@ -60,7 +60,7 @@ class _MakePost extends State<MakePost> {
                         ratingValue = rating.toString();
                       },
                     )),
-                FlatButton(
+                RaisedButton(
                   textColor: Theme.of(context).accentColor,
                   onPressed: () {
                     Navigator.pop(

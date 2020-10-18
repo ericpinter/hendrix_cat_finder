@@ -86,7 +86,7 @@ class _HomeState extends State<Home> {
                 child: Container(
                   padding: const EdgeInsets.only(left: 10.0, right: 10.0),
                   decoration: BoxDecoration(
-                    border: Border.all(color: Colors.red, width: 1.0),
+                    border: Border.all(color: Colors.blue, width: 1.0),
                   ),
                   child: DropdownButton(
                       value: _selectedCat,
