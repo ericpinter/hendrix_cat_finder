@@ -23,7 +23,6 @@ class _HomeState extends State<Home> {
   TextEditingController controllerTwo = TextEditingController();
   List<Cat> _dropdownMenuOfCats = [];
 
-  //IS there a list of cat names somewhere????
   int _selectedCat;
   NetworkLog log;
   double initialRatingValue = 3;
@@ -95,7 +94,8 @@ class _HomeState extends State<Home> {
                           .asMap()
                           .entries
                           .map((MapEntry e) => DropdownMenuItem(
-                                value: 1 + e.key, //TODO handle differences in display list id and db id more gracefully.
+                                value: 1 +
+                                    e.key, //TODO handle differences in display list id and db id more gracefully.
                                 child: Text(e.value.name),
                               ))
                           .toList(),
@@ -107,7 +107,6 @@ class _HomeState extends State<Home> {
                       }),
                 ),
               )),
-          // Text(" ${_selectedCat.name}"),
           new Container(
             margin: const EdgeInsets.only(top: 20.0, left: 10.0, right: 10.0),
             child: new TextField(
