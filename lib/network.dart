@@ -20,14 +20,18 @@ class NetworkLog {
   bool persist;
   final LocalStorage storage = new LocalStorage('CatApp');
   var _message_callback;
+  var _dropdownMenuOfCats;
 
-  NetworkLog(this._message_callback, {this.persist=true}) {
-    this._setupServer();
+  List<Cat> get cats => _dropdownMenuOfCats;
+
+  static Future<NetworkLog> getLog(message_callback, {persist=true}) async {
+    NetworkLog log = new NetworkLog(message_callback, persist:persist);
+    await log._setupServer();
+    await log.getDropDownCatValue();
+    return log;
   }
 
-  Future<int> _addToDatabase(Cat cat) async {
-    return DatabaseHelper.instance.insert(cat);
-  }
+  NetworkLog(this._message_callback, {this.persist=true});
 
   Future<void> _setupServer() async {
     try {
@@ -40,6 +44,21 @@ class NetworkLog {
     }
   }
 
+  Future<void> getDropDownCatValue() async {
+    var query = await DatabaseHelper.instance.queryAllRows();
+    _dropdownMenuOfCats = query
+        .map((json) => Cat.fromJson(json))
+        .where((cat) => cat != null)
+        .toList();
+  }
+
+
+  Future<void> _updateDatabase(Cat cat) async {
+    await DatabaseHelper.instance.insert(cat);
+    await getDropDownCatValue();
+  }
+
+
   void _listenToSocket(Socket socket) {
     socket.listen((data) {
       _handleIncomingMessage(socket.remoteAddress.address, data);
@@ -47,10 +66,10 @@ class NetworkLog {
   }
 
   Future<void> sendAll(Message message) async {
-    _addToDatabase(message.cat);
     for (Friend f in friends) {
       f.send(message);
     }
+    await _updateDatabase(message.cat);
     await _message_callback();
   }
 
@@ -63,7 +82,7 @@ class NetworkLog {
     print("$_log");
     if (!m.protocol) {
       _log.add(m);
-      if (this.persist) await _addToDatabase(m.cat);
+      if (this.persist) await _updateDatabase(m.cat);
     }
     _message_callback();
   }
