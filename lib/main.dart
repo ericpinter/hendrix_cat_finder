@@ -22,7 +22,8 @@ class _HomeState extends State<Home> {
   TextEditingController controllerOne = TextEditingController();
   TextEditingController controllerTwo = TextEditingController();
 
-  int _selectedCat = 1; // Default selected cat is first in the list. I did a bit of testing that this doesn't break things when list is length 0, but it deserves more
+  int _selectedCat =
+      1; // Default selected cat is first in the list. I did a bit of testing that this doesn't break things when list is length 0, but it deserves more
   Future<NetworkLog> logFuture;
   double initialRatingValue = 3;
 
@@ -127,7 +128,7 @@ class _HomeState extends State<Home> {
                   new Container(
                       margin: const EdgeInsets.only(top: 20.0),
                       child: RatingBarIndicator(
-                        //rating: initialRatingValue,
+                        rating: initialRatingValue,
                         //take away or leave not sure? just for start visuals
                         direction: Axis.horizontal,
                         itemCount: 5,
